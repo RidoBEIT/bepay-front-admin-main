@@ -1,0 +1,192 @@
+<header>
+    <link 
+    href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" 
+    rel="stylesheet"  type='text/css'>
+  </header>
+  <div class="row navbar">
+    <div class="col-sm-4">
+         <h2>LOGO</h2>
+     
+    </div>
+    <div class="col-sm-4">
+         <input class="form-control form-control-sm" type="text" [(ngModel)]="term" placeholder="Chercher un BILLET">
+
+   </div>
+   <div class="col-sm-2">
+         <!-- <i class="fa fa-plus" routerLink="/billets" >Ajouter</i>&nbsp;&nbsp;
+
+         <i class="fa fa-link " (click)="showApis()">Apis</i>&nbsp;&nbsp;
+         <i class="fa fa-building-o" aria-hidden="true" routerLink="/compagnies">Compagnies</i>&nbsp;&nbsp; -->
+
+
+   </div>
+   <div class="col-sm-1">
+    <i class="fa fa-plus ff" routerLink="/billets" >&nbsp;Ajouter</i>
+
+   </div>
+   <div class="col-sm-1 text-end">
+
+
+    <!-- <i class="fa fa-power-off" aria-hidden="true" (click)="logout()">Logout</i> -->
+
+    <button mat-button [matMenuTriggerFor]="menu" class="menu"><i class="fa fa-bars ff" aria-hidden="true"></i></button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item class="item" routerLink="/listApi">Apis</button>
+        <button mat-menu-item class="item" routerLink="/listBillets">Billets</button>
+      <button mat-menu-item class="item" routerLink="/compagnies">Compagnies</button>
+      <button mat-menu-item class="item" routerLink="/clients">Clients</button>
+      <button mat-menu-item class="item" routerLink="/users">Utilisateurs</button>
+  <button mat-menu-item class="item" routerLink="/profiles">Profiles</button>
+  <button mat-menu-item class="item" (click)="logout()">Deconnection</button>
+      
+    </mat-menu>
+
+   </div>
+</div>
+
+      <div class="card">
+         
+          <div class="card-body">
+        <h2>Liste des billets</h2>
+
+            <div class="d-flex flex-column">
+              <div class="p-2">
+                <div class="row justify-content-center">
+                    <div class="col-9">
+                        <table class = "table justify-content-center" >
+
+                            <thead bgColor="darkGray" >
+                              
+                                <tr class="Thead">
+                                    <th scope="col" > #</th>
+                                    <th scope="col"> Compagnie </th>
+                                    <th scope="col" > Nom&Prenom </th>
+                                    <th scope="col"> Tarif </th>
+                                    <th scope="col"> Date </th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              
+                                <tr *ngFor = "let billet of billets|filter:term, let i=index" [ngClass]="billet?.idOrigine == null ? 'failed' : '' ">
+                                  <!-- <ng-container bgColor="red" *ngIf="billet?.idOrigine == null">
+                                      <td>{{ i+1 }}</td>
+                                      <td> {{billet?.compagnie?.nom_compagnie }} </td>
+                                      <td> {{billet.client.nom }} {{billet.client.prenom}} </td>
+                                      <td> {{billet.tarif }} </td>
+                                      <td> {{billet.dateVoyage }} </td>
+                                      <td class="text-end">
+                                          <button  mat-raised-button color="#13B157" (click)="open(content, billet)" class="button-vue button" ><i class="fa fa-eye"></i>&nbsp;</button>
+                                      
+                                      </td>
+                                  </ng-container> -->
+                                    <td>{{ i+1 }}</td>
+                                    <td> {{billet?.compagnie?.nom_compagnie }} </td>
+                                    <td> {{billet.client.nom }} {{billet.client.prenom}} </td>
+                                    <td> {{billet.tarif }} </td>
+                                    <td> {{billet.dateVoyage }} </td>
+                                    
+                                    <td class="text-end">
+                                    <button  mat-raised-button color="#13B157" (click)="open(content, billet)" class="button-vue button" ><i class="fa fa-eye"></i>&nbsp;</button>
+                                    <button (click) = "deleteBillet(billet)" mat-raised-button color="warn" class="button" style="margin-left: 10px"><i class="fa fa-trash-o"></i>&nbsp;</button>
+                                
+                                    </td>
+                                </tr>
+                            </tbody>
+                            
+                        </table>
+                        <mat-paginator
+                        previousPageLabel
+                        itemsPerPageLabel
+                        [length]="length"
+                        [pageSize]="pageSize"
+                        [pageSizeOptions]="pageSizeOptions"
+                        (page)="getValues($event)"
+                        aria-label="Select page"
+                        nextPageLabel="Suivante"
+                        >
+                     </mat-paginator>
+                    </div>
+                </div>
+             
+           
+              </div>
+              </div>
+          </div>
+        </div>
+
+
+
+        <ng-template #content let-modal>
+            <div class="modal-header" style="z-index: 99999999;">
+              <h4 class="modal-title" id="modal-basic-title">Détails du billet</h4>
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <table class="table table-striped justify-content-center">
+            
+                <tbody>
+                 <tr >
+                    <td>
+                        <strong>Compagnie</strong>
+                    </td>
+                    <td>
+                        <strong>Nom</strong>
+                    </td>
+                    <td>
+                        <strong>Prénom</strong>
+                    </td>
+                   
+                 </tr>
+                 <tr>
+                    <td>{{currentBillet?.partenaire.nom_compagnie}}</td>
+                    <td>{{currentBillet?.client.nom}}</td>
+                    <td>{{currentBillet?.client.prenom}}</td>
+                 </tr>
+                 <tr>
+                    <td>
+                        <strong>Axe</strong>
+                    </td>
+                    <td>
+                        <strong>Tarif</strong>
+                    </td>
+                    <td>
+                        <strong>Date de voyage</strong>
+                    </td>
+                    
+                 </tr>
+                 <tr>
+                    <td>{{currentAxe?.depart?.nom_ville}}-{{currentAxe?.arrive?.nom_ville}}</td>
+                    <td>{{currentBillet?.tarif}}</td>
+                    <td>{{currentBillet?.dateVoyage}}</td>
+
+                 </tr>
+                 <tr>
+                    <td>
+                        <strong>Service payement</strong>
+                    </td>
+                    <td>
+                        <strong>Date de prise du billet</strong>
+                    </td>
+                    <td>
+                        <strong>Id Billet Origine</strong>
+                    </td>
+                    
+                 </tr>
+                 <tr>
+                    <td>{{currentBillet?.payement.servicePayement.libelle}}</td>
+                    <td>{{currentBillet?.created_at}}</td>
+                    <td>{{currentBillet?.idOrigine}}</td>
+
+                 </tr>
+                </tbody>
+                
+              </table>
+      
+            </div>
+            <div class="modal-footer">
+                <button mat-raised-button color="primary" class="btn" (click)="Create(currentBillet) ; modal.dismiss('Cross click')" *ngIf="currentBillet?.idOrigine==null" >Reparer</button>
+            </div>
+        </ng-template>

@@ -1,0 +1,94 @@
+
+<header>
+    <link 
+    href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" 
+    rel="stylesheet"  type='text/css'>
+  </header>
+  <sb-navbar
+  [term]="term"
+  [content]="content"
+  [placeHol]="placeHol"
+  [size]="sm"
+  ></sb-navbar>
+ 
+          
+          <div class="card-body text-center">
+            <h2> Liste des profiles</h2>
+              <table class = "table justify-content-center">
+                  <thead>
+                      <tr>
+                          <th> #</th>
+                          <th> Libellé </th>
+                         
+                          <th>Actions</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor = "let profile of profiles|filter:term, let i=index" >
+                          <td>{{ i+1 }}</td>
+                          <td> {{ profile.nom_profile }} </td>
+                          <td>
+                          <!-- <button  mat-raised-button color="primary" class=" button" style="margin-left: 10px"  ><i class="fa fa-edit"></i>&nbsp; </button> -->
+                          <button (click) = "deleteProfile(profile)"  mat-raised-button color="warn" class="button " style="margin-left: 10px"><i class="fa fa-trash-o"></i>&nbsp;</button>
+                      
+                          </td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+     
+  
+  <ng-template id="addModal" #content let-modal>
+    <form action="" *ngIf="addProfileFormGroup" [formGroup]="addProfileFormGroup" (ngSubmit)="onAddProfile()">
+      <div class="modal-header" style="z-index: 99999999;">
+        <h4 class="modal-title" id="addProfile">Nouveau Profile</h4>
+        <button type="button" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          
+            
+                
+            <div class="form-group">
+              <label for="nom_profile">Libellé</label>
+              <div class="input-group">
+                <input id="nom_profile" class="form-control" type="text" formControlName="nom_profile">
+              </div>
+            </div>
+           
+           
+            
+      </div>
+      <div class="modal-footer">
+        <button type="button" mat-raised-button color="warn" class="btn " (click)="modal.close('Save click')">Annuler</button>&nbsp;
+        <button type="submit" mat-raised-button color="primary" class=" btn" (click)="modal.close('Save click')">OK</button>
+      </div>
+    </form>
+  </ng-template>
+  
+  
+  
+  <ng-template #content2 let-modal>
+    <form action="" *ngIf="updateProfileFormGroup" [formGroup]="updateProfileFormGroup" (ngSubmit)="onUpdateProfile()">
+      <div class="modal-header" style="z-index: 99999999;">
+        <h4 class="modal-title" id="modal-basic-title">Mise à jour du Profile</h4>
+        <button type="button" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+                       
+            <div class="form-group">
+              <label for="nom_profile">Libellé</label>
+              <div class="input-group">
+                <input id="nom_profile" class="form-control" type="text" formControlName="nom_profile">
+              </div>
+            </div>
+            
+      </div>
+      <div class="modal-footer">
+        <button type="submit" mat-raised-button color="primary" class=" button" (click)="modal.close('Save click')">Submit</button>
+      </div>
+    </form>
+  </ng-template>

@@ -1,0 +1,23 @@
+@import 'styles/variables.scss';
+
+#userDropdown {
+    cursor: pointer;
+}
+.btn{
+    // background-color: rgb(241, 127, 115);
+    width: 100%!important;
+    min-width: unset!important;
+    height: 100%;
+    font-size: large;
+}
+
+.user{
+    color : grey;
+    font-size: small;
+
+}
+
+.icon{
+    background-color:none;
+    
+}

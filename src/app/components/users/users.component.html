@@ -1,0 +1,264 @@
+
+<header>
+  <link 
+  href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" 
+  rel="stylesheet"  type='text/css'>
+</header>
+
+<sb-navbar
+ [term]="term"
+ [content]="content"
+ [placeHol]="placeHol"
+ ></sb-navbar>
+        <div class="card-body">
+            <table class = "table justify-content-center">
+                <thead>
+                    <tr>
+                        <th> #</th>
+                        <th> Nom </th>
+                        <th> Prenom</th>
+                        <th> Username</th>
+                        <th> Email</th>
+                        <th> Profile</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor = "let user of users|filter:term, let i=index" >
+                        <td>{{ i+1 }}</td>
+                        <td> {{ user.nom }} </td>
+                        <td> {{ user.prenom }} </td>
+                        <td> {{ user.username }} </td>
+                        <td> {{ user.email }} </td>
+                        <td> {{ user.profile_user?.nom_profile }} </td>
+                       <td>
+                         
+                        <button  (click)="open(content2, user)"   mat-raised-button color="primary" class = "button"  style="margin-left: 10px"  ><i class="fa fa-edit"></i>&nbsp; </button>
+                        <button (click) = "deleteUser(user)"   mat-raised-button color="warn" class="button " style="margin-left: 10px"><i class="fa fa-trash-o"></i>&nbsp;</button>
+                    
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    
+
+<ng-template  #content let-modal>
+  <p *ngIf="mesVide!=''">{{mesVide}}</p>
+  <form action="" *ngIf="addUserFormGroup" [formGroup]="addUserFormGroup" (ngSubmit)="onAddUser()">
+  
+    <div class="modal-header" style="z-index: 99999999;">
+      <h4 class="modal-title" >Nouvel utilisateur</h4>
+      <button type="button" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <!-- <div class="form-group">
+            <label for="id_user">#</label>
+            <div class="input-group">
+              <input id="id_user" class="form-control" type="number" formControlName="id_user">
+            </div>
+          </div> -->
+          
+              
+         <div>
+          <div class="row">
+            <div class="col-4">
+             <div class="form-group" >
+               <label for="nom">Nom</label>
+               <div class="input-group">
+                 <input id="nom" class="form-control" type="text" formControlName="nom"
+                 [ngClass]="{'is-invalid':submitted && addUserFormGroup.controls['nom'].errors}">
+                <div *ngIf="submitted && addUserFormGroup.controls['nom'].errors" class="invalid-feedback">
+                    <div *ngIf="addUserFormGroup.controls['nom'].errors['required']">Champ Obligatoire </div>
+                </div>
+               </div>
+             </div>
+            </div>
+            <div class="col-4">
+             <div class="form-group">
+               <label for="prenom">Prenom</label>
+               <div class="input-group">
+                 <input id="prenom" class="form-control" type="text" formControlName="prenom"
+                 [ngClass]="{'is-invalid':submitted && addUserFormGroup.controls['prenom'].errors}">
+                <div *ngIf="submitted && addUserFormGroup.controls['prenom'].errors" class="invalid-feedback">
+                    <div *ngIf="addUserFormGroup.controls['prenom'].errors['required']">Champ Obligatoire </div>
+                </div>
+               </div>
+             </div>
+            </div>
+ 
+            <div class="col-4"  >
+             <div class="form-group">
+               <label for="email">Email</label>
+               <div class="input-group">
+                 <input id="email" class="form-control" type="text" formControlName="email"
+                 [ngClass]="{'is-invalid':submitted && addUserFormGroup.controls['email'].errors}">
+                <div *ngIf="submitted && addUserFormGroup.controls['email'].errors" class="invalid-feedback">
+                    <div *ngIf="addUserFormGroup.controls['email'].errors['required']">Champ Obligatoire </div>
+                </div>
+               </div>
+             </div>
+            </div>
+             
+           </div>
+         </div>
+
+         <div>
+           <div class="row">
+
+            <div class="col-4">
+              <div class="form-group">
+                <label for="username">Username</label>
+                <div class="input-group">
+                  <input id="username" class="form-control" type="text" formControlName="username"  (change)="getUsernameCount($event)" id="nUsername"
+                  [ngClass]="{'is-invalid':submitted && addUserFormGroup.controls['username'].errors}">
+                <div *ngIf="submitted && addUserFormGroup.controls['username'].errors" class="invalid-feedback">
+                    <div *ngIf="addUserFormGroup.controls['username'].errors['required']">Champ Obligatoire </div>
+                </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="form-group">
+                <label for="profile_user">Profile</label>
+                <div class="input-group">
+                      <select class="form-control" formControlName="profile_user"
+                      [ngClass]="{'is-invalid':submitted && addUserFormGroup.controls['profile_user'].errors}">
+                <div *ngIf="submitted && addUserFormGroup.controls['profile_user'].errors" class="invalid-feedback">
+                    <div *ngIf="addUserFormGroup.controls['profile_user'].errors['required']">Champ Obligatoire </div>
+                </div>
+                        <option selected>Choisissez un profile</option>
+                        <option *ngFor="let profile of profiles" [ngValue]="profile">{{ profile.nom_profile }}</option>
+                       
+                      </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-group">
+                  <input id="password" class="form-control" type="password" formControlName="password"
+                  [ngClass]="{'is-invalid':submitted && addUserFormGroup.controls['password'].errors}">
+                <div *ngIf="submitted && addUserFormGroup.controls['password'].errors" class="invalid-feedback">
+                    <div *ngIf="addUserFormGroup.controls['password'].errors['required']">Champ Obligatoire </div>
+                </div>
+                </div>
+              </div>
+            </div>
+
+           </div>
+         </div>
+
+         <div>
+          
+         </div>
+         
+          
+         
+          
+         
+
+          
+    </div>
+    <div class="modal-footer">
+      <button type="button" mat-raised-button color="warn" class="btn "(click)="modal.close('Save click')">Annuler</button>&nbsp;
+      <button type="submit" class="btn btn-primary" >OK</button>
+    </div>
+  </form>
+
+</ng-template>
+
+
+
+<ng-template #content2 let-modal>
+  <form action="" *ngIf="updateUserFormGroup" [formGroup]="updateUserFormGroup" (ngSubmit)="onUpdateUser()">
+    <div class="modal-header" style="z-index: 99999999;">
+      <h4 class="modal-title" id="modal-basic-title">Mise à jour de l'utilisateur</h4>
+      <button type="button" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="row">
+          <div class="col-4">
+           <div class="form-group" >
+             <label for="nom">Nom</label>
+             <div class="input-group">
+               <input id="nom" class="form-control" type="text" formControlName="nom">
+             </div>
+           </div>
+          </div>
+          <div class="col-4">
+           <div class="form-group">
+             <label for="prenom">Prenom</label>
+             <div class="input-group">
+               <input id="prenom" class="form-control" type="text" formControlName="prenom">
+             </div>
+           </div>
+          </div>
+
+          <div class="col-4"  >
+           <div class="form-group">
+             <label for="email">Email</label>
+             <div class="input-group">
+               <input id="email" class="form-control" type="text" formControlName="email">
+             </div>
+           </div>
+          </div>
+           
+         </div>
+       </div>
+
+       <div>
+         <div class="row">
+
+          <div class="col-4">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <div class="input-group">
+                <input id="username" class="form-control" type="text" formControlName="username"  (change)="getUsernameCount($event)" id="nUsername">
+              </div>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="form-group">
+              <label for="profile_user">Profile</label>
+              <div class="input-group">
+                    <select class="form-control" formControlName="profile_user">
+                      <option selected>Choisissez un profile</option>
+                      <option *ngFor="let profile of profiles" [ngValue]="profile">{{ profile.nom_profile }}</option>
+                     
+                    </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="col-4">
+            <div class="form-group">
+              <label for="password">Password</label>
+              <div class="input-group">
+                <input id="password" class="form-control" type="password" formControlName="password">
+              </div>
+            </div>
+          </div> -->
+
+         </div>
+       </div>
+
+       <div>
+       
+       </div>
+          
+    </div>
+    <div class="modal-footer">
+      <button type="submit" mat-raised-button color="" class="btn submit" (click)="modal.close('Save click')">OK</button>
+    </div>
+  </form>
+</ng-template>

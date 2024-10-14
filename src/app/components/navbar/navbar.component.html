@@ -1,0 +1,45 @@
+
+<header>
+    <link 
+    href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" 
+    rel="stylesheet"  type='text/css'>
+  </header>
+<div class="row navbar">
+    <div class="col-sm-4">
+        <a class="navbar-brand px-2 bg-white pt-1 rounded" style="padding-top: 10px !important;"><span class="be">BE</span><span class="pa">PAY</span></a>     
+    </div>
+    <div class="col-sm-4">
+         <input class="form-control form-control-sm" type="text" [(ngModel)]=term [placeholder]=placeHol>
+   </div>
+   <div class="col-sm-2">
+         <!-- <i class="fa fa-plus" (click)="open(content)" >Ajouter</i>&nbsp;&nbsp;
+
+         <i class="fa fa-link " routerLink="/listApi">Apis</i>&nbsp;&nbsp;
+         <i class="fa fa-book" routerLink="/listBillets">Billets</i>&nbsp;&nbsp; -->
+
+
+
+   </div>
+   <div class="col-sm-1">
+      <i class="fa fa-plus ff" (click)="open(content,size)" >&nbsp;Ajouter</i>
+   </div>
+   <div class="col-sm-1 text-end">
+
+
+    <!-- <i class="fa fa-power-off" aria-hidden="true" (click)="logout()">Logout</i> -->
+
+    <button mat-button [matMenuTriggerFor]="menu" class="menu"><i class="fa fa-bars ff" aria-hidden="true"></i></button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item class="item" routerLink="/listApi">Apis</button>
+      <button mat-menu-item class="item" routerLink="/partenaires">Fournisseurs</button>
+      <button mat-menu-item class="item" routerLink="/transactions">Transactions</button>
+      <button mat-menu-item class="item" routerLink="/cash">CASH IN/OUT</button>
+      <button mat-menu-item class="item" routerLink="/decaisser">Décaissements</button>
+      <button mat-menu-item class="item" routerLink="/clients">Applications Clients</button>
+      <button mat-menu-item class="item" routerLink="/users">Utilisateurs</button>
+      <button mat-menu-item class="item" routerLink="/profiles">Profiles</button>
+      <button mat-menu-item class="item" routerLink="/TypeErrorCode">Gestion Error</button>
+      <button mat-menu-item class="item" (click)="logout()">Déconnexion</button>
+    </mat-menu>
+  </div>
+</div>

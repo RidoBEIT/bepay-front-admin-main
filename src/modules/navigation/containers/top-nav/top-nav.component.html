@@ -1,0 +1,13 @@
+<nav class="sb-topnav navbar navbar-expand   classe">
+    <a class="navbar-brand" ><span class="be">BE</span><span class="bil">BIL</span><span class="let">LET</span></a><button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" data-cy="topNavToggleSideNav" (click)="toggleSideNav()" *ngIf="profileAdmin==true"><fa-icon [icon]='["fas", "bars"]'></fa-icon></button
+    ><!-- Navbar Search-->
+    <div class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0 text-end">
+        <div class="example-button-container" >
+            <i class="material-icons icon" routerLink="/tableau" >home</i>
+          </div>
+    </div>
+    <!-- Navbar-->
+    <ul class="navbar-nav ml-auto ml-md-0">
+        <sb-top-nav-user></sb-top-nav-user>
+    </ul>
+</nav>

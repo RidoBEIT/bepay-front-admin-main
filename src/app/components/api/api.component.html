@@ -1,0 +1,648 @@
+
+<header>
+    <link 
+    href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" 
+    rel="stylesheet"  type='text/css'>
+  </header>
+
+
+
+<sb-navbar
+ [term]="term"
+ [content]="content"
+ [placeHol]="placeHol"
+ [size]="md"
+ ></sb-navbar>
+
+      <div class="card">
+
+          <div class="card-body">
+            <div class="d-flex flex-column">
+              <div class="p-2">
+              <table class = "table table-striped justify-content-center" >
+                  <thead>
+                    <h2>Liste des Apis</h2>
+
+                      <tr>
+                          <th scope="col" > #</th>
+                          <th scope="col"> Fournisseur </th>
+                          <th scope="col" > Libelle </th>
+                          <th scope="col"> Description </th>
+                          <th scope="col"> Url </th>
+                          <th scope="col">Actions</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor = "let api of apis|filter:term, let i=index" >
+                          <td>{{ i+1 }}</td>
+                          <td> {{api?.partenaire?.nom_partenaire }} </td>
+                          <td> {{api.libelle }} </td>
+                          <td> {{api.description }} </td>
+                          <td> {{api.url }} </td>
+                          
+                          <td>
+                          <button (click)="goToDetails(api)" mat-raised-button color="#13B157" class="button-vue button" ><i class="fa fa-eye"></i>&nbsp;</button>
+                          <button (click)="open(content2,api)" mat-raised-button color="primary" class = "button" style="margin-left: 10px"  ><i class="fa fa-edit"></i>&nbsp;</button>
+                          <button (click)="deleteApi(api)" mat-raised-button color="warn" class = "button" style="margin-left: 10px"><i class="fa fa-trash-o"></i>&nbsp;</button>
+                      
+                          </td>
+                      </tr>
+                  </tbody>
+              </table>
+              </div>
+              </div>
+          </div>
+        </div>
+  
+  <ng-template id="addModal" #content let-modal>
+    <form action="" *ngIf="addApiFormGroup" [formGroup]="addApiFormGroup" (ngSubmit)="onAddApi()">
+      <div class="modal-header" style="z-index: 99999999;">
+        <h4 class="modal-title" id="addAxe">Nouvel Api</h4>
+        <button type="button" style="color: white;" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+
+          <div class="col-4">
+            <div class="form-group">
+              <label for="">Partenaire</label>
+              <div class="input-group">
+                    <select class="form-control" formControlName="partenaire" >
+                      <option selected>Choisissez le partenaire</option>
+                      <option *ngFor="let compagnie of partenaires" [ngValue]="compagnie">{{ compagnie.nom_partenaire }}</option>
+                     
+                    </select>
+              </div>
+          </div>
+          </div>
+
+          <div class="col-4">
+            <div class="form-group">
+              <label for="">Action</label>
+              <div class="input-group">
+                    <select class="form-control" formControlName="action" (change)="getAction()" >
+                      <option selected>Choisissez l'action</option>
+                      <option *ngFor="let action of actions" [ngValue]="action">{{ action.libelle_typeAction }}</option>
+                     
+                    </select>
+              </div>
+          </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label for="">Méthode</label>
+              <div class="input-group">
+                    <select class="form-control" formControlName="methode"  (change)="getMethode()">
+                      <option selected>Choisissez la méthode</option>
+                      <option *ngFor="let methode of methodes" [ngValue]="methode">{{ methode }}</option>
+                     
+                    </select>
+              </div>
+          </div>
+          </div>
+        </div>
+        <div class="row">
+       
+
+          <div class="col-4">
+            <div class="form-group">
+              <label for="">URL</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="text" formControlName="url">
+              </div>
+            </div>
+        </div>
+        <div class="col-4">
+          <div class="form-group">
+            <label for="">Libelle</label>
+            <div class="input-group">
+              <input id="tarif_axe" class="form-control" type="text" formControlName="libelle">
+            </div>
+          </div>
+         
+
+      </div>
+      <div class="col-4">
+          <div class="form-group">
+            <label for="">Description</label>
+            <div class="input-group">
+              <input id="tarif_axe" class="form-control" type="text" formControlName="description">
+            </div>
+          </div>
+         
+
+      </div>
+
+        </div>
+        <div class="row">
+          
+           
+        </div>
+         <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                  <label for="">Managed Entity</label>
+                  <div class="input-group">
+                    <select class="form-control" formControlName="managedEntity" (change)="getManagedEntity()" >
+                        <option selected>Choisissez l'entité</option>
+                        <option *ngFor="let managedEntity of manageds" [ngValue]="managedEntity" >{{ managedEntity }}</option>
+                       
+                      </select>
+                  </div>
+                </div>
+    
+              </div>
+            <div class="col-4">
+                <div class="form-group">
+                  <label for="">Type Retour</label>
+                  <div class="input-group">
+                    <input id="tarif_axe" class="form-control" type="text" formControlName="typeRetour">
+                  </div>
+                </div>
+    
+              </div>
+              <div class="col-4">
+                <div class="form-group">
+                  <label for="">Reponse</label>
+                  <div class="input-group">
+                    <select class="form-control" formControlName="reponse" >
+                        <option selected>Choisissez le type de reponse</option>
+                        <option *ngFor="let reponse of reponses" [ngValue]="reponse" >{{ reponse.libelle_typeReponse }}</option>
+                       
+                      </select>
+                  </div>
+                </div>
+    
+              </div>
+
+         </div>
+             
+          </div>
+          <p class="text-danger" *ngIf="billetAlert!=''">
+            {{billetAlert}}
+        </p>
+           
+            <h3 class="text-center">Ajouter les parametres:</h3>
+              <div class="">
+                  <ng-container formArrayName="parametres">
+                      <ng-container >
+                          <div class="lesson-form-row" >
+
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th>Key</th>
+                                  <th>Value</th>
+                                  <th>Ordre</th>
+                                  <th>Type</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let parametreForm of parametres().controls; let i = index" [formGroupName]="i">
+                                    <td>
+                                        <div class="form-group">
+                                          <div class="input-group">
+                                            <input class="form-control" type="text" formControlName="key">
+                                          </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                    <div class="form-group">
+                                      <div class="input-group">
+                                        <input class="form-control" type="text" formControlName="value">
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div class="form-group">
+                                      <div class="input-group">
+                                        <input class="form-control" type="number" formControlName="ordre">
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div class="form-group">
+                                      <div class="input-group">
+                                            <select class="form-control" formControlName="type" >
+                                              <option selected>Choisissez le type</option>
+                                              <option *ngFor="let type of types" [ngValue]="type">{{ type }}</option>
+                                             
+                                            </select>
+                                      </div>
+                                  </div>
+                                  </td>
+                                 
+                                  <td>
+                                    <button (click)="deleteParametre(i)" mat-raised-button color="warn" class="button" style="margin-left: 10px"><i class="fa fa-trash-o"></i>&nbsp;</button>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                      </ng-container>
+                  </ng-container>
+                  <button mat-raised-button color="primary" class="btn" type="button" (click)="addParametre()"><i class="fa fa-plus"></i>&nbsp;Ajouter</button>
+              </div>
+
+      <div class="modal-footer">
+        <button type="button" mat-raised-button color="warn" class="btn" (click)="modal.close('Save click')">Annuler</button>&nbsp;
+        <button type="submit" mat-raised-button color="#13B157" class="btn submit" (click)="modal.close('Save click')">OK</button>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template id="addModal" #content2 let-modal>
+    <form action="" *ngIf="updateApiFormGroup" [formGroup]="updateApiFormGroup" (ngSubmit)="onUpdateApi()">
+      <div class="modal-header" style="z-index: 99999999;">
+        <h4 class="modal-title" id="addAxe">Mise à de l' Api</h4>
+        <button type="button" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+
+          <div class="col-4">
+            <div class="form-group">
+              <label for="">Compagnie</label>
+              <div class="input-group">
+                    <select class="form-control" formControlName="partenaire" >
+                      <option selected>Choisissez la compagnie</option>
+                      <option *ngFor="let compagnie of partenaires" [ngValue]="compagnie">{{ compagnie.nom_partenaire }}</option>
+                     
+                    </select>
+              </div>
+          </div>
+          </div>
+
+          <div class="col-4">
+            <div class="form-group">
+              <label for="">Action</label>
+              <div class="input-group">
+                    <select class="form-control" formControlName="action" >
+                      <option selected>Choisissez l'action</option>
+                      <option *ngFor="let action of actions" [ngValue]="action">{{ action.libelle_typeAction }}</option>
+                     
+                    </select>
+              </div>
+          </div>
+          </div>
+        
+          <div class="col-4">
+            <div class="form-group">
+              <label for="">Méthode</label>
+              <div class="input-group">
+                    <select class="form-control" formControlName="methode" >
+                      <option selected>Choisissez la méthode</option>
+                      <option *ngFor="let methode of methodes" [ngValue]="methode">{{ methode }}</option>
+                     
+                    </select>
+              </div>
+          </div>
+          </div>
+
+         
+</div>
+        
+        <div class="row">
+          <div class="col-4">
+            <div class="form-group">
+              <label for="">URL</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="text" formControlName="url">
+              </div>
+            </div>
+        </div>
+            <div class="col-4">
+                <div class="form-group">
+                  <label for="">Libelle</label>
+                  <div class="input-group">
+                    <input id="tarif_axe" class="form-control" type="text" formControlName="libelle">
+                  </div>
+                </div>
+               
+    
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                  <label for="">Description</label>
+                  <div class="input-group">
+                    <input id="tarif_axe" class="form-control" type="text" formControlName="description">
+                  </div>
+                </div>
+               
+    
+            </div>
+           
+       
+           
+         </div>
+         <div class="row">
+          <div class="col-4">
+            <div class="form-group">
+              <label for="">Type Service</label>
+              <select class="form-control" formControlName="managedEntity" >
+                <option selected>Choisissez l'entité</option>
+                <option *ngFor="let managedEntity of manageds" [ngValue]="managedEntity">{{ managedEntity }}</option>
+               
+              </select>
+            </div>
+
+          </div>
+        <div class="col-4">
+            <div class="form-group">
+              <label for="">Type Retour</label>
+              <div class="input-group">
+                <input id="tarif_axe" class="form-control" type="text" formControlName="typeRetour">
+              </div>
+            </div>
+
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label for="">Reponse</label>
+              <div class="input-group">
+                <select class="form-control" formControlName="reponse" >
+                    <option selected>Choisissez le type de reponse</option>
+                    <option *ngFor="let reponse of reponses" [ngValue]="reponse" >{{ reponse.libelle_typeReponse }}</option>
+                   
+                  </select>
+              </div>
+            </div>
+
+          </div>
+         </div>
+             
+          </div>
+           
+     
+      <div class="modal-footer">
+        <button type="button" mat-raised-button color="warn" class="btn" (click)="modal.close('Save click')">Annuler</button>&nbsp;
+        <button type="submit" mat-raised-button color="#13B157" class="btn submit" (click)="modal.close('Save click')">OK</button>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template id="addModal" #content3 let-modal>
+      <div class="modal-header" style="z-index: 99999999;">
+        <h4 class="modal-title" id="addAxe">Listes des paramètre de {{currentApi.libelle}} de {{currentApi?.partenaire.nom_partenaire}} </h4>
+        <button type="button" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class = "table table-striped justify-content-center" >
+            <thead>
+                <tr>
+                    <th scope="col" > #</th>
+                    <th scope="col"> Clé </th>
+                    <th scope="col" > Valeur </th>
+                    <th scope="col" > Ordre </th>
+                    <th scope="col"> Type </th>
+                    <th scope="col"> Has Children </th>
+                    <th scope="col"> Parent</th>
+                    <th scope="col"> Niveau</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor = "let param of currentApi.parametres, let i=index" >
+                    <td>{{ param.idParametre }}</td>
+                    <td> {{param.key }} </td>
+                    <td> {{param.value}} </td>
+                    <td> {{param.ordre }} </td>
+                    <td> {{param.type }} </td>
+                    <td> {{param.has_children }} </td>
+                    <td> {{param.parent }} </td>
+                    <td> {{param.niveau }} </td>
+                    
+                    <td>
+                    <button (click)="open(content4,currentApi,param)" mat-raised-button color="primary" class = "button" style="margin-left: 10px"  ><i class="fa fa-edit"></i>&nbsp;</button>
+                    <button (click)="onDeleteParam(param)" mat-raised-button color="warn" class = "button" style="margin-left: 10px"><i class="fa fa-trash-o"></i>&nbsp;</button>
+                
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <button mat-raised-button color="primary" class="btn" (click)="open(content5,currentApi)" ><i class="fa fa-plus"></i>&nbsp;Ajouter</button>
+
+       
+    </div>
+
+      <div class="modal-footer">
+        <button type="button" mat-raised-button color="warn" class="btn" (click)="modal.close('Save click')">Annuler</button>&nbsp;
+      </div>
+  </ng-template>
+
+
+  <ng-template id="addModal" #content4 let-modal>
+    <form action="" *ngIf="updateParamFormGroup" [formGroup]="updateParamFormGroup" (ngSubmit)="onUpdateParam()">
+      <div class="modal-header" style="z-index: 99999999;">
+        <h4 class="modal-title" id="addAxe">Mise à jour de l' Api</h4>
+        <button type="button" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+
+          <div class="col-6">
+            <div class="form-group">
+              <label for="">Clé</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="text" formControlName="key">
+              </div>
+          </div>
+          </div>
+
+          <div class="col-6">
+            <div class="form-group">
+              <label for="">Valeur</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="text" formControlName="value">
+
+              </div>
+          </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group">
+              <label for="">Ordre</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="number" formControlName="ordre">
+
+              </div>
+          </div>
+          </div>
+
+          <div class="col-6">
+            <div class="form-group">
+              <label for="">Type</label>
+              <select class="form-control" formControlName="type" >
+                <option selected>Choisissez le type</option>
+                <option *ngFor="let type of types" [ngValue]="type">{{ type }}</option>
+               
+              </select>
+              
+            </div>
+        </div>
+
+        </div>
+
+        <div class="row">
+          
+          <div class="col-6">
+            <div class="form-group">
+              <label for="">Parent</label>
+              <select class="form-control" formControlName="parent" >
+                <option selected>Choisissez le type</option>
+                <option *ngFor="let parent of apiParams" [ngValue]="parent.idParametre">{{parent.idParametre}}/{{ parent.key}}/{{parent.description }}</option>
+               
+              </select>
+              
+            </div>
+         </div>
+
+         <div class="col-6">
+          <div class="form-group">
+            <label for="">Niveau</label>
+            <div class="input-group">
+              <input id="" class="form-control" type="number" formControlName="niveau">
+
+            </div>
+        </div>
+        </div>
+
+        </div>
+        <div class="row">
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="">Description</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="text" formControlName="description">
+  
+              </div>
+              
+            </div>
+         </div>
+        </div>
+       </div>
+
+      <div class="modal-footer">
+        <button type="button" mat-raised-button color="warn" class="btn" (click)="modal.close('Save click')">Annuler</button>&nbsp;
+        <button type="submit" mat-raised-button color="#13B157" class="btn submit" (click)="modal.close('Save click')">Submit</button>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template id="addModal" #content5 let-modal>
+    <form action="" *ngIf="addParamFormGroup" [formGroup]="addParamFormGroup" (ngSubmit)="onAddParam()">
+      <div class="modal-header" style="z-index: 99999999;">
+        <h4 class="modal-title" id="addAxe">Ajouter un parametre à {{currentApi.libelle}} </h4>
+        <button type="button" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+
+          <div class="col-6">
+            <div class="form-group">
+              <label for="">Clé</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="text" formControlName="key">
+              </div>
+          </div>
+          </div>
+
+          <div class="col-6">
+            <div class="form-group">
+              <label for="">Valeur</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="text" formControlName="value">
+
+              </div>
+          </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group">
+              <label for="">Ordre</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="number" formControlName="ordre">
+
+              </div>
+          </div>
+          </div>
+
+          <div class="col-6">
+            <div class="form-group">
+              <label for="">Type</label>
+              <select class="form-control" formControlName="type" >
+                <option selected>Choisissez le type</option>
+                <option *ngFor="let type of types" [ngValue]="type">{{ type }}</option>
+               
+              </select>
+              
+            </div>
+        </div>
+
+        </div>
+
+        <div class="row">
+          
+          <div class="col-6">
+            <div class="form-group">
+              <label for="">Parent</label>
+              <select class="form-control" formControlName="parent" >
+                <option selected>Choisissez le type</option>
+                <option *ngFor="let parent of apiParams" [ngValue]="parent.idParametre">{{ parent.key }}/{{parent.description }}</option>
+               
+              </select>
+              
+            </div>
+         </div>
+
+         <div class="col-6">
+          <div class="form-group">
+            <label for="">Niveau</label>
+            <div class="input-group">
+              <input id="" class="form-control" type="number" formControlName="niveau">
+
+            </div>
+        </div>
+        </div>
+
+        </div>
+        <div class="row">
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="">Description</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="text" formControlName="description">
+  
+              </div>
+              
+            </div>
+         </div>
+        </div>
+       </div>
+
+      <div class="modal-footer">
+        <button type="button" mat-raised-button color="warn" class="btn" (click)="modal.close('Save click')">Annuler</button>&nbsp;
+        <button type="submit" mat-raised-button color="#13B157" class="btn submit" (click)="modal.close('Save click')">OK</button>
+      </div>
+    </form>
+  </ng-template>
+ 
+  

@@ -1,0 +1,277 @@
+<header>
+    <link 
+    href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" 
+    rel="stylesheet"  type='text/css'>
+  </header>
+<sb-navbar
+ [term]="term"
+ [placeHol]="placeHol"
+ [content]="content"
+ [size]="md"
+ ></sb-navbar>
+<div class="row">
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+            <h4>Types d'erreur code</h4>
+        </div>
+          <div class="card-body">
+            <table class = "table table-striped justify-content-center" >
+                <thead>
+                    <tr>
+                        <th scope="col" > #</th>
+                        <th scope="col">Libelle </th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor = "let rp of responseType let i=index" >
+                        <td>{{ i+1 }}</td>
+                        <td> {{rp.libelle_type_error}} </td>
+                       
+                        <td>
+                          <button (click)="openDetails(rp)" mat-raised-button color="#13B157" class="button-vue button" ><i class="fa fa-eye"></i>&nbsp;</button>
+                        <button (click)="open(content3,'md',rp)" mat-raised-button color="primary" class = "button" style="margin-left: 10px"  ><i class="fa fa-edit"></i>&nbsp;</button>
+                        <button (click)="onDeleteResponseType(rp)" mat-raised-button color="warn" class = "button" style="margin-left: 10px"><i class="fa fa-trash-o"></i>&nbsp;</button>
+                    
+                        </td>
+                       
+                    </tr>
+                </tbody>
+            </table>
+            <!-- <button mat-raised-button color="primary" class="btn" (click)="open(content5,currentApi)" ><i class="fa fa-plus"></i>&nbsp;Ajouter</button> -->
+      
+           
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card" *ngIf="ShowDetails==true">
+        <div class="card-header row">
+          <div class="col-10">
+            <h4>Valeurs Possibles de <b> {{currentRespType?.libelle_type_error}} </b></h4>
+
+          </div>
+          <div class="col-2">
+            <i class="fa fa-plus ff" (click)="open2(content7)" >&nbsp;Ajouter</i>
+          </div>
+      
+        
+          </div>
+          <div class="card-body">
+            <table class = "table table-striped justify-content-center" >
+                <thead>
+                    <tr>
+                        <th scope="col" > #</th>
+                        <th scope="col" > Code </th>
+                        <th scope="col"> Description </th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor = "let pv of values let i=index" >
+                        <td>{{ i+1 }}</td>
+                        <td> {{pv.code}} </td>
+                        <td> {{pv.description }} </td>
+                       
+                        <td>
+                        <button (click)="open2(content4,'md',pv)" mat-raised-button color="primary" class = "button" style="margin-left: 10px"  ><i class="fa fa-edit"></i>&nbsp;</button>
+                        <button (click)="onDeleteCode(pv)" mat-raised-button color="warn" class = "button" style="margin-left: 10px"><i class="fa fa-trash-o"></i>&nbsp;</button>
+                    
+                        </td>
+                       
+                    </tr>
+                </tbody>
+            </table>
+            <!-- <button mat-raised-button color="primary" class="btn" (click)="open(content5,currentApi)" ><i class="fa fa-plus"></i>&nbsp;Ajouter</button> -->
+      
+           
+        </div>
+      </div>
+    </div>
+   </div>
+
+   <ng-template id="addModal" #content7 let-modal>
+    <form action="" *ngIf="addErrorFormGroup" [formGroup]="addErrorFormGroup" (ngSubmit)="onAddCode()">
+      <div class="modal-header" style="z-index: 99999999;">
+        <h4 class="modal-title" id="addAxe">Ajout de code</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group">
+              <label for="">Code</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="text" formControlName="code">
+              </div>
+          </div>
+          </div>
+
+          <div class="col-6">
+            <div class="form-group">
+              <label for="">Description</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="text" formControlName="description">
+              </div>
+          </div>
+          </div>
+        </div>
+
+      
+       </div>
+
+      <div class="modal-footer">
+        <button type="button" mat-raised-button color="warn" class="btn" (click)="modal.close('Save click')">Annuler</button>&nbsp;
+        <button type="submit" mat-raised-button color="#13B157" class="btn submit" (click)="modal.close('Save click')">Submit</button>
+      </div>
+    </form>
+  </ng-template>
+
+
+   <ng-template id="addModal" #content3 let-modal>
+    <form action="" *ngIf="updateTypeErrorFormGroup" [formGroup]="updateTypeErrorFormGroup" (ngSubmit)="onUpdateResponseTypeCode()">
+      <div class="modal-header" style="z-index: 99999999;">
+        <h4 class="modal-title" id="addAxe">Mise à jour type de code</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+
+            <div class="col-12">
+                <div class="form-group">
+                <label for="">Choisissez un partenaire </label>
+                <select class="form-control" formControlName="partenaire" >
+                    <option *ngFor="let compagnie of partenaires" [ngValue]="compagnie">{{ compagnie.nom_partenaire }}</option>
+                </select>
+            </div>
+        </div>
+        </div>
+
+        <div class="row">
+
+          <div class="col-6">
+            <div class="form-group">
+              <label for="">Libelle</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="text" formControlName="libelle_type_error">
+              </div>
+          </div>
+          </div>
+
+          <div class="col-6">
+            <div class="form-group">
+              <label for="">Description</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="text" formControlName="description">
+
+              </div>
+          </div>
+          </div>
+        </div>
+     
+       </div>
+
+      <div class="modal-footer">
+        <button type="button" mat-raised-button color="warn" class="btn" (click)="modal.close('Save click')">Annuler</button>&nbsp;
+        <button type="submit" mat-raised-button color="#13B157" class="btn submit" (click)="modal.close('Save click')">Submit</button>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template id="addModal" #content4 let-modal>
+    <form action="" *ngIf="updateErrorFormGroup" [formGroup]="updateErrorFormGroup" (ngSubmit)="onUpdateCode()">
+      <div class="modal-header" style="z-index: 99999999;">
+        <h4 class="modal-title" id="addAxe">Mise à jour des codes d'erreurs</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+
+          <div class="col-6">
+            <div class="form-group">
+              <label for="">Code</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="text" formControlName="code">
+
+              </div>
+          </div>
+          </div>
+
+          <div class="col-6">
+            <div class="form-group">
+              <label for="">Description</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="text" formControlName="description">
+              </div>
+          </div>
+          </div>
+        </div>
+     
+       </div>
+
+      <div class="modal-footer">
+        <button type="button" mat-raised-button color="warn" class="btn" (click)="modal.close('Save click')">Annuler</button>&nbsp;
+        <button type="submit" mat-raised-button color="#13B157" class="btn submit" (click)="modal.close('Save click')">Submit</button>
+      </div>
+    </form>
+  </ng-template>
+
+<ng-template id="addModal" #content let-modal>
+    <form action="" *ngIf="addTypeErrorFormGroup" [formGroup]="addTypeErrorFormGroup" (ngSubmit)="onAddTypeError()">
+      <div class="modal-header" style="z-index: 99999999;">
+            <h4 class="modal-title" id="addAxe">Ajouter un type d'erreur</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+            </button>
+      </div>
+        <div class="modal-body">
+            <div class="row">
+
+                <div class="col-12">
+                    <div class="form-group">
+                    <label for="">Choisissez un partenaire </label>
+                    <select class="form-control" formControlName="partenaire" >
+                        <option *ngFor="let compagnie of partenaires" [ngValue]="compagnie">{{ compagnie.nom_partenaire }}</option>
+                    </select>
+                </div>
+            </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-6">
+                    <div class="form-group">
+                    <label for="">Libelle</label>
+                    <div class="input-group">
+                        <input class="form-control" type="text" formControlName="libelle_type_error">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="">Description</label>
+                    <div class="input-group">
+                        <input class="form-control" type="text" formControlName="description">
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        
+      <div class="modal-footer">
+        <button type="button" mat-raised-button color="warn" class="btn" (click)="modal.close('Save click')">Annuler</button>&nbsp;
+        <button type="submit" mat-raised-button color="#13B157" class="btn submit" (click)="modal.close('Save click')">OK</button>
+      </div>
+    </form>
+  </ng-template>

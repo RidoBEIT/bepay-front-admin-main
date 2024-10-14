@@ -1,0 +1,128 @@
+<header>
+  <link 
+  href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" 
+  rel="stylesheet"  type='text/css'>
+</header>
+<sb-navbar
+[term]="term"
+[content]="content"
+[placeHol]="placeHol"
+></sb-navbar>
+<div>
+  <div class="card-body text-center">
+      <div class="row justify-content-center">
+        <div class="col-10">
+          <div *ngFor="let option of options">
+            <button class="btn btn-primary" (click)="onOptionChange(option)">{{ option }}</button> <ul></ul>
+          </div>
+      </div>
+
+          <div class="col-10" *ngIf="selectedOption">
+              <h2>Type de cash selectionné : {{selectedOption}}</h2>
+                <table class = "table table-striped text-center">
+                    <thead>
+                        <tr>
+                            <th> #</th>
+                            <th> Code </th>
+                            <th> Nom client</th>
+                            <th> Numero </th>
+                            <th> Montant</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor = "let ca of cashs|filter:term, let i=index" >
+                            <td>{{ i+1 }}</td>
+                            <td> {{ ca.code }} </td>
+                            <td> {{ ca.nom}} </td>
+                            <td> {{ ca.numero}} </td>
+                            <td> {{ ca.montant}} </td>
+                            
+                            <td>
+                              <button (click)="open(content3,ca,'md')" mat-raised-button color="#13B157" class="button-vue button" ><i class="fa fa-eye"></i>&nbsp;</button>
+                              <button  (click)="open(content2, ca)" mat-raised-button color="primary" class=" button"  style="margin-left: 10px"  ><i class="fa fa-edit"></i>&nbsp; </button>
+                              <button (click) = "onDelete(ca)" mat-raised-button color="warn" class="button "  style="margin-left: 10px"><i class="fa fa-trash-o"></i>&nbsp;</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+      </div>
+  </div>
+
+  <ng-template id="addModal" #content let-modal>
+      <form action="" *ngIf="addCashFormGroup" [formGroup]="addCashFormGroup" (ngSubmit)="addCash()">
+        <div class="modal-header" style="z-index: 99999999;">
+          <h4 class="modal-title" id="addAxe">Ajouter un cash </h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+  
+          <div class="row">
+  
+            <div class="col-6">
+              <div class="form-group">
+                <label for="">Nom</label>
+                <div class="input-group">
+                  <input id="" class="form-control" type="text" formControlName="nom">
+                </div>
+            </div>
+            </div>
+  
+            <div class="col-6">
+              <div class="form-group">
+                <label for="">Prenom</label>
+                <div class="input-group">
+                  <input id="" class="form-control" type="text" formControlName="prenom">
+  
+                </div>
+            </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label for="">Montant </label>
+                <div class="input-group">
+                  <input id="" class="form-control" type="number" formControlName="montant">
+                </div>
+            </div>
+            </div>
+  
+            <div class="col-6">
+              <div class="form-group">
+                <label for="">Libelle </label>
+                <input id="" class="form-control" type="text" formControlName="libelle">
+              </div>
+          </div>
+  
+          </div>
+          <div class="row">
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="">Numero </label>
+                  <div class="input-group">
+                    <input id="" class="form-control" type="number" formControlName="numero">
+                  </div>
+              </div>
+              </div>
+
+              <div class="col-6">
+                  <div class="form-group">
+                    <label for="">Code </label>
+                    <div class="input-group">
+                      <input id="" class="form-control" type="text" formControlName="code">
+                    </div>
+                </div>
+                </div>
+            </div>
+         </div>
+  
+        <div class="modal-footer">
+          <button type="button" mat-raised-button color="warn" class="btn" (click)="modal.close('Save click')">Annuler</button>&nbsp;
+          <button type="submit" mat-raised-button color="#13B157" class="btn submit" (click)="modal.close('Save click')">OK</button>
+        </div>
+      </form>
+    </ng-template>

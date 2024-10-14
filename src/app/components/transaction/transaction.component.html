@@ -1,0 +1,350 @@
+<header>
+    <link 
+    href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" 
+    rel="stylesheet"  type='text/css'>
+  </header>
+  <sb-navbar
+  [term]="term"
+  [content]="content"
+  [placeHol]="placeHol"
+  ></sb-navbar>
+ <div>
+  
+  <div class="card-body text-center">
+    <h1>Choisissez une transaction : </h1>
+    <select [(ngModel)]="selectedOption" (change)="onOptionChange()">
+      <option *ngFor="let option of options" [value]="option">{{ option }}</option>
+    </select>
+    <div class="row justify-content-center">
+        <div class="col-10">
+          <h2>Transaction de type {{selectedOption}}</h2>
+            <table class = "table table-striped text-center">
+                <thead>
+                    <tr>
+                        <th> #</th>
+                        <th> Code </th>
+                        <th> Nom client</th>
+                        <th> Numero </th>
+                        <th> Service</th>
+                        <th> Montant</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor = "let trans of transactions|filter:term, let i=index" >
+                        <td>{{ i+1 }}</td>
+                        <td> {{ trans.code }} </td>
+                        <td> {{ trans.nom}} </td>
+                        <td> {{ trans.numero}} </td>
+                        <td> {{ trans.partenaire.nom_partenaire}} </td>
+                        <td> {{ trans.montant}} </td>
+                        
+                        <td>
+                          <button (click)="open(content3,trans,'md')" mat-raised-button color="#13B157" class="button-vue button" ><i class="fa fa-eye"></i>&nbsp;</button>
+                          <button  (click)="open(content2, trans)" mat-raised-button color="primary" class=" button"  style="margin-left: 10px"  ><i class="fa fa-edit"></i>&nbsp; </button>
+                          <button (click) = "onDelete(trans)" mat-raised-button color="warn" class="button "  style="margin-left: 10px"><i class="fa fa-trash-o"></i>&nbsp;</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+ </div>
+
+
+  <ng-template id="addModal" #content let-modal>
+    <form action="" *ngIf="addTransactionFormGroup" [formGroup]="addTransactionFormGroup" (ngSubmit)="onAdd()">
+      <div class="modal-header" style="z-index: 99999999;">
+        <h4 class="modal-title" id="addclient">Nouvelle Transaction</h4>
+        <button type="button" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+            
+            <div class="col-4">
+                <div class="form-group">
+                  <label for="">Partenaire</label>
+                  <div class="input-group">
+                        <select class="form-control" formControlName="partenaire" (change)="getIdP()">
+                          <option selected>Choisissez le partenaire</option>
+                          <option *ngFor="let partenaire of partenaires" [ngValue]="partenaire">{{ partenaire.nom_partenaire}}</option>
+                         
+                        </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-4">
+                <div class="form-group">
+                  <label for="">Type</label>
+                  <div class="input-group">
+                        <select class="form-control" formControlName="typeTransaction">
+                          <option selected>Choisissez le type</option>
+                          <option *ngFor="let type of typeT" [ngValue]="type">{{ type.libelle_typeTransaction}}</option>
+                         
+                        </select>
+                  </div>
+                </div>
+              </div>
+
+            <div class="col-4">
+              <div class="form-group">
+               <label >Libelle</label>
+                <div class="input-group">
+                  <input class="form-control" type="text" formControlName="libelle_transaction" >
+                </div>
+              </div>
+            </div>
+          
+
+
+          </div>
+          <div class="row">
+
+            
+            <div class="col-4">
+                <div class="form-group">
+                  <label >Nom</label>
+                  <div class="input-group">
+                    <input  class="form-control" type="text" formControlName="nom">
+                  </div>
+                </div>
+            </div>
+
+            <div class="col-4">
+                <div class="form-group">
+                  <label >Prenom</label>
+                  <div class="input-group">
+                    <input  class="form-control" type="text" formControlName="prenom">
+                  </div>
+                </div>
+            </div>
+  
+              <div class="col-4">
+                <div class="form-group">
+                  <label >Numero</label>
+                  <div class="input-group">
+                    <input  class="form-control" type="text" formControlName="numero">
+                  </div>
+                </div>
+              </div>
+             
+
+            </div>
+            <div class="row">
+
+            
+              <div class="col-4">
+                <div class="form-group">
+                  <label >Code</label>
+                  <div class="input-group">
+                    <input  class="form-control" type="text" formControlName="code">
+                  </div>
+                </div>
+            </div>
+  
+              <div class="col-4">
+                  <div class="form-group">
+                    <label >Montant</label>
+                    <div class="input-group">
+                      <input  class="form-control" type="text" formControlName="montant">
+                    </div>
+                  </div>
+              </div>
+    
+               
+  
+          </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" mat-raised-button color="warn" class="btn " (click)="modal.close('Save click')">Annuler</button>&nbsp;
+        <button type="submit" mat-raised-button class="btn submit" (click)="modal.close('Save click')">Enregistrer</button>
+        
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #content2 let-modal>
+    <form action="" *ngIf="updateTransactionFormGroup" [formGroup]="updateTransactionFormGroup" (ngSubmit)="onUpdate()">
+      <div class="modal-header" style="z-index: 99999999;">
+        <h4 class="modal-title" id="modal-basic-title">Mise à jour de la transaction</h4>
+        <button type="button" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+            
+            <div class="col-4">
+                <div class="form-group">
+                  <label for="">Partenaire</label>
+                  <div class="input-group">
+                        <select class="form-control" formControlName="partenaire">
+                          <option selected>Choisissez le partenaire</option>
+                          <option *ngFor="let partenaire of partenaires" [ngValue]="partenaire">{{ partenaire.nom_partenaire}}</option>
+                         
+                        </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-4">
+                <div class="form-group">
+                  <label for="">Type</label>
+                  <div class="input-group">
+                        <select class="form-control" formControlName="typeTransaction">
+                          <option selected>Choisissez le type</option>
+                          <option *ngFor="let type of typeT" [ngValue]="type">{{ type.libelle_typeTransaction}}</option>
+                         
+                        </select>
+                  </div>
+                </div>
+              </div>
+
+            <div class="col-4">
+              <div class="form-group">
+               <label >Code</label>
+                <div class="input-group">
+                  <input class="form-control" type="text" formControlName="code" >
+                </div>
+              </div>
+            </div>
+          
+
+
+          </div>
+          <div class="row">
+
+            
+            <div class="col-4">
+                <div class="form-group">
+                  <label >Nom</label>
+                  <div class="input-group">
+                    <input  class="form-control" type="text" formControlName="nom">
+                  </div>
+                </div>
+            </div>
+
+            <div class="col-4">
+                <div class="form-group">
+                  <label >Prenom</label>
+                  <div class="input-group">
+                    <input  class="form-control" type="text" formControlName="prenom">
+                  </div>
+                </div>
+            </div>
+  
+              <div class="col-4">
+                <div class="form-group">
+                  <label >Numero</label>
+                  <div class="input-group">
+                    <input  class="form-control" type="text" formControlName="numero">
+                  </div>
+                </div>
+              </div>
+             
+
+            </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn submit" (click)="modal.close('Save click')">Enregistrer</button>
+      </div>
+    </form>
+  </ng-template>
+
+
+  <ng-template id="addModal" #content3 let-modal>
+    <div class="modal-header" style="z-index: 99999999;">
+      <h4 class="modal-title" id="addAxe">Informations Transaction</h4>
+      <button type="button"  aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- <div>
+    <img src="{{photoBaseUrl+currentTrans?.photoUrl}}" style="width: 100px;" class="img-fluid" routerLink="/billet" >
+
+      </div> -->
+      <div class="row justify-content-center">    
+          <div class="col-sm-12">
+            <div class="row b-b-default m-b-40">
+              <div class="col-sm-4 mb-2">
+                <p class="m-b-10 f-w-600">Nom</p>
+                <h4 class="text-muted f-w-400">{{currentTrans?.nom}}</h4>
+              </div>
+              <div class="col-sm-4 mb-2">
+                  <p class="m-b-10 f-w-600">Prenom</p>
+                  <h4 class="text-muted f-w-400">{{currentTrans?.prenom}}</h4>
+              </div>
+              <div class="col-sm-4 mb-2">
+                  <p class="m-b-10 f-w-600">Numero</p>
+                  <h4 class="text-muted f-w-400">{{currentTrans?.numero}}</h4>
+                  <!-- <h4 class="text-muted f-w-400">{{currentTrans?.prenom | number: '1.0-0'}}</h4> -->
+              </div>
+              <div class="col-sm-4 mb-2">
+                  <p class="m-b-10 f-w-600">Code</p>
+                  <h4 class="text-muted f-w-400">{{currentTrans?.code}}</h4>
+                  <!-- <h4 class="text-muted f-w-400">{{currentTrans?.prenom | number: '1.0-0'}}</h4> -->
+                </div>
+                <div class="col-sm-4 mb-2">
+                  <p class="m-b-10 f-w-600">Type Transaction</p>
+                  <h4 class="text-muted f-w-400">{{currentTrans?.typeTransaction?.libelle_typeTransaction}}</h4>
+                  <!-- <h4 class="text-muted f-w-400">{{currentTrans?.prenom | number: '1.0-0'}}</h4> -->
+                </div>
+              <div class="col-sm-4 mb-2">
+                <p class="m-b-10 f-w-600">Partenaire</p>
+                <h4 class="text-muted f-w-400">{{currentTrans?.partenaire?.nom_partenaire}}</h4>
+                <!-- <h4 class="text-muted f-w-400">{{currentTrans?.prenom | number: '1.0-0'}}</h4> -->
+              </div>
+             
+          
+            </div>
+          </div>
+        </div>
+           
+    </div>         
+         
+    <div class="modal-footer">
+      <button *ngIf="isVisible" mat-raised-button class="primary" style="background-color: blue; border-bottom: 3px; color:white" (click)="getRembourser()">REMBOURSER {{currentTrans?.nom}}</button>
+    <!--  <button type="button" mat-raised-button color="warn" class="btn" (click)="modal.close('Save click')">Fermer</button>&nbsp;-->
+    </div>
+  </ng-template>
+
+  <ng-template #transactionResponseModal let-modal>
+    <div class="modal-header" style="z-index: 99999999;">
+      <h4 class="modal-title" id="addAxe">Confirmation de la transaction</h4>
+      <button type="button" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- <div>
+    <img src="{{photoBaseUrl+currentTrans?.photoUrl}}" style="width: 100px;" class="img-fluid" routerLink="/billet" >
+
+      </div> -->
+      <div class="row justify-content-center">    
+          <div class="col-sm-12" *ngIf="transactionResponse">
+            <div class="row b-b-default m-b-40">
+              <div class="col-sm-12 mb-2">
+                <h4 class="f-w-500">{{transactionResponse.message}}</h4>
+                <p>
+                  Une demande de confirmation de paiement vous a été envoyée par SMS au numero. <br>
+                  Merci de confirmer la demande et de cliquer sur le bouton suivant pour vefifier le statut de la transaction.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+           
+    </div>         
+         
+    <div class="modal-footer">
+      <button type="button" mat-raised-button color="warn" class="btn" (click)="onCheckStatusTxn(); modal.close('Save click')">Verifier</button>&nbsp;
+      <!-- <button type="submit" mat-raised-button color="#13B157" class="btn submit" (click)="modal.close('Save click')">Enregistrer</button> -->
+    </div>
+  </ng-template>

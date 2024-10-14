@@ -1,0 +1,405 @@
+
+<header>
+    <link 
+    href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" 
+    rel="stylesheet"  type='text/css'>
+  </header>
+  <sb-navbar
+ [term]="term"
+ [content]="content"
+ [placeHol]="placeHol"
+ [size]="md"
+ ></sb-navbar>
+      <div class="card">
+          <!-- <div class="card-header">
+              <div class="row">
+                  <div class="col-10">
+                    <h2>Liste des Partenaires</h2>
+                     
+                  </div>
+                  <div class="col-2 text-right">
+                    <i class="fa fa-plus" (click)="open(content)" ></i>&nbsp;&nbsp;
+                      <i class="fa fa-book" routerLink="/listBillets"></i>&nbsp;&nbsp;
+                      <i class="fa fa-link " routerLink="/listApi"></i>&nbsp;
+                    <i class="fa fa-power-off" aria-hidden="true"></i>
+
+                  </div>
+              </div>
+          </div> -->
+          <div class="card-body">
+            <div class="d-flex flex-column">
+              <div class="p-2">
+                <div class="row justify-content-center">
+                  <div class="col-10">
+                    <table class = "table table-striped justify-content-center" >
+                        <thead>
+                            <tr>
+                                <th scope="col" > #</th>
+                                <th scope="col"> Partenaire </th>
+                                <th scope="col" > Telephone </th>
+                                <th scope="col"> Email </th>
+                                <th scope="col"> Adresse Physique </th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor = "let partenaire of partenaires|filter:term, let i=index" >
+                                <td>
+                                 {{i+1}}
+                                </td>
+                                <td> {{partenaire?.nom_partenaire }} </td>
+                                <td> {{partenaire.telephone }} </td>
+                                <td> {{partenaire.email }} </td>
+                                <td> {{partenaire.adressePhysique }} </td>
+                                
+                                <td>
+                                <button (click)="open(content3,partenaire)" mat-raised-button color="#13B157" class="button-vue button" ><i class="fa fa-eye"></i>&nbsp;</button>
+                                <button  (click)="open(content2,partenaire)" mat-raised-button color="primary" class = "button" style="margin-left: 10px"  ><i class="fa fa-edit"></i>&nbsp;</button>
+                                <button (click)="deletePartenaire(partenaire)" mat-raised-button color="warn" class = "button" style="margin-left: 10px"><i class="fa fa-trash-o"></i>&nbsp;</button>
+                            
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    </div>
+              </div>
+              </div>
+          </div>
+        </div>
+  
+  <ng-template id="addModal" #content2 let-modal>
+    <form action="" *ngIf="updatePartenaireFormGroup" [formGroup]="updatePartenaireFormGroup" (ngSubmit)="onUpdatePartenaire()">
+      <div class="modal-header" style="z-index: 99999999;">
+        <h4 class="modal-title" id="addAxe">Modifier Partenaire</h4>
+        <button type="button" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+
+          <div class="col-md-6 col-sm-12">
+            <div class="form-group">
+              <label for="">Nom</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="text" formControlName="nom_partenaire">
+                    
+              </div>
+          </div>
+          </div>
+
+          <div class="col-md-6 col-sm-12">
+            <div class="form-group">
+              <label for="">Téléphone</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="text" formControlName="telephone">
+                   
+              </div>
+          </div>
+          </div>
+        </div>
+        <div class="row">         
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label for="">Email</label>
+                  <div class="input-group">
+                    <input id="" class="form-control" type="text" formControlName="email">
+                       
+                  </div>
+              </div>
+              </div>
+
+          <div class="col-md-6 col-sm-12">
+            <div class="form-group">
+              <label for="">Adresse</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="text" formControlName="adressePhysique">
+              </div>
+            </div>
+        </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label for="">RCCM</label>
+                  <div class="input-group">
+                    <input id="" class="form-control" type="text" formControlName="rccm">
+                  </div>
+                </div>
+               
+    
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label for="">NIF</label>
+                  <div class="input-group">
+                    <input id="" class="form-control" type="text" formControlName="nif">
+                  </div>
+                </div>
+               
+    
+            </div>
+           
+        </div>
+       
+
+        <div class="row">
+          <div class="col-md-6 col-sm-12">
+              <div class="form-group">
+                <label for="">Login</label>
+                <div class="input-group">
+                  <input id="" class="form-control" type="text" formControlName="login">
+                </div>
+              </div>
+              
+          </div>
+          <div class="col-md-6 col-sm-12">
+              <div class="form-group">
+                <label for="">Password</label>
+                <div class="input-group">
+                  <input id="" class="form-control" type="text" formControlName="password">
+                </div>
+              </div>
+             
+  
+          </div>
+         
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-sm-12">
+          <div class="form-group">
+            <label for="">BaseUrl</label>
+            <div class="input-group">
+              <input id="" class="form-control" type="text" formControlName="baseUrl">
+            </div>
+          </div>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            
+            <div class="form-group">
+                <label for="">Photo</label>
+                <div class="input-group">
+                <input id="" class="form-control-sm" type="file" formControlName="logo"  (change)="onFileChange($event)">
+    
+                </div>
+            </div>
+          </div>
+      </div>      
+             
+    </div>
+           
+           
+      <div class="modal-footer">
+        <button type="button" mat-raised-button color="warn" class="btn" (click)="modal.close('Save click')">Annuler</button>&nbsp;
+        <button type="submit" mat-raised-button color="#13B157" class="btn submit" (click)="modal.close('Save click')">Enregistrer</button>
+      </div>
+    </form>
+  </ng-template>
+
+  
+  <ng-template id="addModal" #content let-modal>
+    <form action="" *ngIf="addPartenaireFormGroup" [formGroup]="addPartenaireFormGroup" (ngSubmit)="onAddPartenaire()">
+      <div class="modal-header" style="z-index: 99999999;">
+        <h4 class="modal-title" id="addAxe">Créer un Partenaire</h4>
+        <button type="button"  aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+
+          <div class="col-md-6 col-sm-12">
+            <div class="form-group">
+              <label for="">Nom</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="text" formControlName="nom_partenaire">
+                    
+              </div>
+          </div>
+          </div>
+
+          <div class="col-md-6 col-sm-12">
+            <div class="form-group">
+              <label for="">Téléphone</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="text" formControlName="telephone">
+                   
+              </div>
+          </div>
+          </div>
+        </div>
+        <div class="row">         
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label for="">Email</label>
+                  <div class="input-group">
+                    <input id="" class="form-control" type="text" formControlName="email">
+                       
+                  </div>
+              </div>
+              </div>
+
+          <div class="col-md-6 col-sm-12">
+            <div class="form-group">
+              <label for="">Adresse</label>
+              <div class="input-group">
+                <input id="" class="form-control" type="text" formControlName="adressePhysique">
+              </div>
+            </div>
+        </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label for="">RCCM</label>
+                  <div class="input-group">
+                    <input id="" class="form-control" type="text" formControlName="rccm">
+                  </div>
+                </div>
+               
+    
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label for="">NIF</label>
+                  <div class="input-group">
+                    <input id="" class="form-control" type="text" formControlName="nif">
+                  </div>
+                </div>
+               
+    
+            </div>
+           
+        </div>
+       
+
+        <div class="row">
+          <div class="col-md-6 col-sm-12">
+              <div class="form-group">
+                <label for="">Login</label>
+                <div class="input-group">
+                  <input id="" class="form-control" type="text" formControlName="login">
+                </div>
+              </div>
+              
+          </div>
+          <div class="col-md-6 col-sm-12">
+              <div class="form-group">
+                <label for="">Password</label>
+                <div class="input-group">
+                  <input id="" class="form-control" type="text" formControlName="password">
+                </div>
+              </div>
+             
+  
+          </div>
+         
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-sm-12">
+          <div class="form-group">
+            <label for="">BaseUrl</label>
+            <div class="input-group">
+              <input id="" class="form-control" type="text" formControlName="baseUrl">
+            </div>
+          </div>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            
+            <div class="form-group">
+                <label for="">Photo</label>
+                <div class="input-group">
+                <input id="" class="form-control-sm-2" type="file" (change)="onFileChange($event)">
+    
+                </div>
+            </div>
+          </div>
+      </div>  
+             
+    </div>
+           
+           
+      <div class="modal-footer">
+        <button type="button" mat-raised-button color="warn" class="btn" (click)="modal.close('Save click')">Annuler</button>&nbsp;
+        <button type="submit" mat-raised-button color="#13B157" class="btn submit" (click)="modal.close('Save click')">Enregistrer</button>
+      </div>
+    </form>
+  </ng-template>
+
+
+  <ng-template id="addModal" #content3 let-modal>
+      <div class="modal-header" style="z-index: 99999999;">
+        <h4 class="modal-title" id="addAxe">Informations Partenaire</h4>
+        <button type="button" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <div>
+      <img src="{{photoBaseUrl+currentPartenaire?.photoUrl}}" style="width: 100px;" class="img-fluid" routerLink="/billet" >
+
+        </div> -->
+        <div class="row">    
+            <div class="col-sm-12">
+              <div class="row b-b-default m-b-40">
+                <div class="col-sm-4 mb-2">
+                  <p class="m-b-10 f-w-600" >Partenaire</p>
+                  <h4 class="text-muted f-w-400">{{currentPartenaire?.nom_partenaire}}</h4>
+                </div>
+                <div class="col-sm-4 mb-2">
+                    <p class="m-b-10 f-w-600">Téléphone</p>
+                    <h4 class="text-muted f-w-400">{{currentPartenaire?.telephone}}</h4>
+                </div>
+                <div class="col-sm-4 mb-2">
+                    <p class="m-b-10 f-w-600">Email</p>
+                    <h4 class="text-muted f-w-400">{{currentPartenaire?.email}}</h4>
+                    <!-- <h4 class="text-muted f-w-400">{{currentPartenaire?.prenom | number: '1.0-0'}}</h4> -->
+                </div>
+                <div class="col-sm-4 mb-2">
+                    <p class="m-b-10 f-w-600">Adresse</p>
+                    <h4 class="text-muted f-w-400">{{currentPartenaire?.adressePhysique}}</h4>
+                    <!-- <h4 class="text-muted f-w-400">{{currentPartenaire?.prenom | number: '1.0-0'}}</h4> -->
+                  </div>
+                  <div class="col-sm-4 mb-2">
+                    <p class="m-b-10 f-w-600">RCCM</p>
+                    <h4 class="text-muted f-w-400">{{currentPartenaire?.rccm}}</h4>
+                    <!-- <h4 class="text-muted f-w-400">{{currentPartenaire?.prenom | number: '1.0-0'}}</h4> -->
+                  </div>
+                <div class="col-sm-4 mb-2">
+                  <p class="m-b-10 f-w-600">NIF</p>
+                  <h4 class="text-muted f-w-400">{{currentPartenaire?.nif}}</h4>
+                  <!-- <h4 class="text-muted f-w-400">{{currentPartenaire?.prenom | number: '1.0-0'}}</h4> -->
+                </div>
+                <div class="col-sm-4 mb-2">
+                  <p class="m-b-10 f-w-600">BaseUrl</p>
+                  <h4 class="text-muted f-w-400">{{currentPartenaire?.baseUrl}}</h4>
+                  <!-- <h4 class="text-muted f-w-400">{{currentPartenaire?.prenom | number: '1.0-0'}}</h4> -->
+                </div>
+                <div class="col-sm-4 mb-2">
+                  <p class="m-b-10 f-w-600">Login</p>
+                  <h4 class="text-muted f-w-400">{{currentPartenaire?.login}}</h4>
+                  <!-- <h4 class="text-muted f-w-400">{{currentPartenaire?.prenom | number: '1.0-0'}}</h4> -->
+                </div>
+                <div class="col-sm-4 mb-2">
+                  <p class="m-b-10 f-w-600">Password</p>
+                  <h4 class="text-muted f-w-400">{{currentPartenaire?.password}}</h4>
+                  <!-- <h4 class="text-muted f-w-400">{{currentPartenaire?.prenom | number: '1.0-0'}}</h4> -->
+                </div>
+            
+              </div>
+            </div>
+          </div>
+             
+      </div>
+           
+           
+      <div class="modal-footer">
+        <button type="button" mat-raised-button color="warn" class="btn" (click)="modal.close('Save click')">Fermer</button>&nbsp;
+        <!-- <button type="submit" mat-raised-button color="#13B157" class="btn submit" (click)="modal.close('Save click')">Enregistrer</button> -->
+      </div>
+  </ng-template>
